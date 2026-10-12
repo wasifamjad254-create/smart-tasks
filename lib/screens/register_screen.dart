@@ -104,204 +104,136 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const ink = Color(0xFF17213B);
+    const muted = Color(0xFF7B8298);
+    const purple = Color(0xFF6558F5);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-
-              const Text(
-                'Create Account',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Name
-              TextFormField(
-                controller: nameController,
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  hintText: 'Enter your name',
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Email
-              TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your email';
-                  }
-
-                  final email = value.trim();
-                  final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-
-                  if (!emailPattern.hasMatch(email)) {
-                    return 'Please enter a valid email';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Phone
-              TextFormField(
-                controller: phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: 'Phone',
-                  hintText: 'Enter your phone number',
-                  prefixIcon: Icon(Icons.phone),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-
-                  final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
-
-                  if (digits.length < 10) {
-                    return 'Please enter a valid phone number';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Password
-              TextFormField(
-                controller: passwordController,
-                obscureText: !isPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  prefixIcon: const Icon(Icons.lock),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+      appBar: AppBar(
+        leading: IconButton(icon: const Icon(Icons.arrow_back_rounded), onPressed: () => Navigator.pop(context)),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(25, 6, 25, 28),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 460),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 58,
+                      height: 58,
+                      decoration: BoxDecoration(color: const Color(0xFFEFEDFF), borderRadius: BorderRadius.circular(19)),
+                      child: const Icon(Icons.person_add_alt_1_rounded, color: purple, size: 29),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-
-                  // Laravel requires at least 8 characters.
-                  if (value.length < 8) {
-                    return 'Password must be at least 8 characters';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Confirm Password
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: !isConfirmPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
-                  hintText: 'Enter password again',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      isConfirmPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+                    const SizedBox(height: 23),
+                    const Text('Create your account', style: TextStyle(color: ink, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -.6)),
+                    const SizedBox(height: 8),
+                    const Text('A few details and you’re ready to get organized.', style: TextStyle(color: muted, fontSize: 14, height: 1.5)),
+                    const SizedBox(height: 26),
+                    const Text('Full name', style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: nameController,
+                      keyboardType: TextInputType.name,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: const InputDecoration(hintText: 'Enter your name', prefixIcon: Icon(Icons.person_outline_rounded)),
+                      validator: (value) => value == null || value.trim().isEmpty ? 'Please enter your name' : null,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  }
-
-                  if (value != passwordController.text) {
-                    return 'Passwords do not match';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 30),
-
-              // Register Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : register,
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('REGISTER', style: TextStyle(fontSize: 16)),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Back to Login
-              TextButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        Navigator.pop(context);
+                    const SizedBox(height: 16),
+                    const Text('Email address', style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(hintText: 'you@example.com', prefixIcon: Icon(Icons.mail_outline_rounded)),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) return 'Please enter your email';
+                        if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) return 'Please enter a valid email';
+                        return null;
                       },
-                child: const Text('Already have an account? Login'),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Phone number', style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(hintText: 'Enter your phone number', prefixIcon: Icon(Icons.phone_outlined)),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) return 'Please enter your phone number';
+                        if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 10) return 'Please enter a valid phone number';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Password', style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: !isPasswordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'At least 8 characters',
+                        prefixIcon: const Icon(Icons.lock_outline_rounded),
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
+                          icon: Icon(isPasswordVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Please enter your password';
+                        if (value.length < 8) return 'Password must be at least 8 characters';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Confirm password', style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      obscureText: !isConfirmPasswordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your password again',
+                        prefixIcon: const Icon(Icons.lock_outline_rounded),
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(() => isConfirmPasswordVisible = !isConfirmPasswordVisible),
+                          icon: Icon(isConfirmPasswordVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Please confirm your password';
+                        if (value != passwordController.text) return 'Passwords do not match';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 26),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : register,
+                        child: isLoading
+                            ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                            : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Create account'), SizedBox(width: 8), Icon(Icons.arrow_forward_rounded, size: 18)]),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Center(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          const Text('Already have an account? ', style: TextStyle(color: muted, fontSize: 13)),
+                          TextButton(onPressed: isLoading ? null : () => Navigator.pop(context), child: const Text('Log in')),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
       ),

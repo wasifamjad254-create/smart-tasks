@@ -67,53 +67,83 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const ink = Color(0xFF17213B);
+    const muted = Color(0xFF7B8298);
+    const purple = Color(0xFF6558F5);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Task'),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
+        title: const Text('New task'),
+        leading: IconButton(icon: const Icon(Icons.arrow_back_rounded), onPressed: () => Navigator.pop(context)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Task title',
-                  hintText: 'e.g. Learn Flutter',
-                  border: OutlineInputBorder(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(22),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [Color(0xFF6558F5), Color(0xFF8D82FF)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.edit_note_rounded, color: Colors.white, size: 34),
+                      SizedBox(height: 16),
+                      Text('One thing at a time.', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800)),
+                      SizedBox(height: 7),
+                      Text('Write down what you want to get done.', style: TextStyle(color: Color(0xFFEDEBFF), fontSize: 13)),
+                    ],
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a task title';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'What do you need to do?',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 28),
+                const Text('Task title', style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 9),
+                TextFormField(
+                  controller: _titleController,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(hintText: 'e.g. Finish project proposal', prefixIcon: Icon(Icons.title_rounded)),
+                  validator: (value) => value == null || value.trim().isEmpty ? 'Please enter a task title' : null,
                 ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isSaving ? null : saveTask,
-                  child: isSaving
-                      ? const CircularProgressIndicator()
-                      : const Text('Save Task'),
+                const SizedBox(height: 22),
+                const Text('Description', style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 9),
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(hintText: 'Add a few details (optional)', alignLabelWithHint: true, prefixIcon: Icon(Icons.notes_rounded)),
                 ),
-              ),
-            ],
+                const SizedBox(height: 18),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(color: const Color(0xFFEFEDFF), borderRadius: BorderRadius.circular(17)),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.info_outline_rounded, color: purple),
+                      SizedBox(width: 11),
+                      Expanded(child: Text('Your new task will be saved as Pending. You can update its status later.', style: TextStyle(color: ink, height: 1.4, fontSize: 12))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isSaving ? null : saveTask,
+                    child: isSaving
+                        ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                        : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.add_rounded), SizedBox(width: 8), Text('Save task')]),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
